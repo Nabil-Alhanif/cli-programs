@@ -19,7 +19,8 @@ enum chars {
     LEFT_C = '<',
     RIGHT_C = '>',
     FOOD = '$',
-    EMPTY = ' '
+    EMPTY = ' ',
+    BORDER = '#'
 };
 
 class Segment {
@@ -186,7 +187,7 @@ int main()
     int max_row, max_col;
     getmaxyx(stdscr, max_row, max_col);
 
-    Snake snake(max_col, max_row);
+    Snake snake(max_col - 2, max_row - 3);
 
     bool is_game_running = 1;
 
@@ -211,9 +212,20 @@ int main()
             erase();
             mvprintw(0, 0, "Current score: %d", snake.score);
 
-            for (int row = 0; row < max_row - 1; row++) {
-                for (int col = 0; col < max_col - 1; col++)
-                    mvaddch(row + 1, col, snake.board[row][col]);
+            // Draw border
+            for (int i = 0; i < max_col; i++) {
+                mvaddch(1, i, BORDER); // Upper
+                mvaddch(max_row - 1, i, BORDER); // Lower
+            }
+
+            for (int i = 1; i < max_row; i++) {
+                mvaddch(i, 0, BORDER); // Left
+                mvaddch(i, max_col - 1, BORDER); // Right
+            }
+
+            for (int row = 0; row < snake.max_row; row++) {
+                for (int col = 0; col < snake.max_col; col++)
+                    mvaddch(row + 2, col + 1, snake.board[row][col]);
             }
 
             t1 = t2;
